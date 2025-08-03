@@ -1,10 +1,9 @@
 import Fastify from "fastify";
+import userRoutes from "./routes/user";
 
 const app = Fastify();
 
-app.get("/", async () => {
-  return { message: "API running" };
-});
+app.register(userRoutes);
 
 app.listen({ port: 3000 }, (err) => {
   if (err) throw err;
