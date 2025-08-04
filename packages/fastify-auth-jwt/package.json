@@ -1,0 +1,10 @@
+{
+ "name": "fastify-auth-jwt",
+ "version": "1.0.0",
+ "main": "index.ts",
+ "dependencies": {
+  "fastify": "^5",
+  "fastify-plugin": "^5.0.1",
+  "@fastify/jwt": "^9.1.0"
+ }
+}

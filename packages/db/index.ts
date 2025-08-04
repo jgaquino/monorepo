@@ -18,7 +18,9 @@ export const DatabaseUserOperations = {
   findMany: async () => {
     return await prisma.user.findMany();
   },
-  findOne: async (id: string) => {
-    return await prisma.user.findUnique({ where: { id } });
+  findOne: async (id: string | null, email?: string) => {
+    const query = (id && { id }) || (email && { email }) || null;
+    if (!query) throw new Error("Pass id or email");
+    return await prisma.user.findUnique({ where: query });
   },
 };
