@@ -52,6 +52,17 @@ export const DatabasePostOperations = {
     });
   },
   findOne: async (id: string) => {
-    return await prisma.user.findUnique({ where: { id } });
+    return await prisma.post.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+    });
   },
 };

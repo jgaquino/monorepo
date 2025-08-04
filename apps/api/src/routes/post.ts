@@ -29,4 +29,14 @@ export default async function postRoutes(fastify: FastifyInstance) {
       return res.code(500).send(error);
     }
   });
+
+  fastify.get("/posts/:id", async (req, res) => {
+    const { id } = req.params as { id: string };
+
+    try {
+      return res.send(await DatabasePostOperations.findOne(id));
+    } catch (error) {
+      return res.code(500).send(error);
+    }
+  });
 }
