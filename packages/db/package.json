@@ -7,6 +7,10 @@
   ".": "./index.ts"
  },
  "dependencies": {
+  "prisma": "^6.13.0",
   "@prisma/client": "^6.13.0"
+ },
+ "scripts": {
+  "prisma-db-init": "prisma migrate dev --name init"
  }
 }

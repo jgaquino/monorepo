@@ -1,18 +1,21 @@
 {
- "name": "api",
- "version": "1.0.0",
- "main": "src/index.ts",
- "scripts": {
-  "dev": "ts-node-dev --watch src src/index.ts",
-  "build": "tsc --build tsconfig.json",
-  "start": "node dist/index.js"
- },
- "dependencies": {
-  "fastify": "^5"
- },
- "devDependencies": {
-  "@types/node": "^24.1.0",
-  "ts-node-dev": "^2.0.0",
-  "typescript": "^5.9.2"
- }
+  "name": "api",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "ts-node-dev --watch src src/index.ts",
+    "build": "tsc --build tsconfig.json",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "db": "workspace:*",
+    "dotenv": "^17.2.1",
+    "fastify": "^5",
+    "fastify-auth-jwt": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
 }
