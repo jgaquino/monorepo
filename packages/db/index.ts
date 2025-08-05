@@ -1,27 +1,62 @@
-import { PrismaClient, type User, type Post } from "@prisma/client";
+import { PrismaClient, type Post } from "@prisma/client";
+import {
+  UserReponseType,
+  CreateUserType,
+  UpdateUserType,
+  UserType,
+} from "./schemas/User";
 
 const prisma = new PrismaClient();
 
 export const DatabaseUserOperations = {
-  createOne: async (newUser: User) => {
+  createOne: async (newUser: CreateUserType): Promise<UserReponseType> => {
     return await prisma.user.create({ data: newUser });
   },
-  deleteOne: async (id: string) => {
-    return await prisma.user.delete({ where: { id } });
+  deleteOne: async (id: string): Promise<void> => {
+    await prisma.user.delete({ where: { id } });
   },
-  updateOne: async (id: string, user: User) => {
+  updateOne: async (
+    id: string,
+    userData: UpdateUserType
+  ): Promise<UserReponseType> => {
     return await prisma.user.update({
       where: { id },
-      data: user,
+      data: userData,
     });
   },
-  findMany: async () => {
-    return await prisma.user.findMany();
+  findMany: async (): Promise<UserType[]> => {
+    return await prisma.user.findMany({
+      include: {
+        posts: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            userId: true,
+          },
+        },
+      },
+    });
   },
-  findOne: async (id: string | null, email?: string) => {
+  findOne: async (
+    id: string | null,
+    email?: string
+  ): Promise<UserType | null> => {
     const query = (id && { id }) || (email && { email }) || null;
-    if (!query) throw new Error("Pass id or email");
-    return await prisma.user.findUnique({ where: query });
+    if (!query) throw new Error("Either 'id' or 'email' must be provided.");
+    return await prisma.user.findUnique({
+      where: query,
+      include: {
+        posts: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            userId: true,
+          },
+        },
+      },
+    });
   },
 };
 
