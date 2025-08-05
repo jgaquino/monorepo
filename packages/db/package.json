@@ -1,16 +1,19 @@
 {
- "name": "db",
- "version": "1.0.0",
- "main": "index.ts",
- "exports": {
-  "./types": "./types.ts",
-  ".": "./index.ts"
- },
- "dependencies": {
-  "prisma": "^6.13.0",
-  "@prisma/client": "^6.13.0"
- },
- "scripts": {
-  "prisma-db-init": "prisma migrate dev --name init"
- }
+  "name": "db",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "exports": {
+    "./schemas/User": "./schemas/User.ts",
+    "./schemas/Post": "./schemas/Post.ts",
+    "./types": "./types.ts",
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.13.0",
+    "@sinclair/typebox": "^0.34.38",
+    "prisma": "^6.13.0"
+  },
+  "scripts": {
+    "prisma-db-init": "prisma migrate dev --name init"
+  }
 }

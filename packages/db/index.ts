@@ -1,10 +1,11 @@
-import { PrismaClient, type Post } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import {
   UserReponseType,
   CreateUserType,
   UpdateUserType,
   UserType,
 } from "./schemas/User";
+import { PostInputType, PostType } from "./schemas/Post";
 
 const prisma = new PrismaClient();
 
@@ -61,19 +62,22 @@ export const DatabaseUserOperations = {
 };
 
 export const DatabasePostOperations = {
-  createOne: async (newPost: Omit<Post, "id">) => {
+  createOne: async (newPost: PostInputType): Promise<PostType> => {
     return await prisma.post.create({ data: newPost });
   },
-  deleteOne: async (id: string) => {
-    return await prisma.post.delete({ where: { id } });
+  deleteOne: async (id: string): Promise<void> => {
+    await prisma.post.delete({ where: { id } });
   },
-  updateOne: async (id: string, post: Omit<Post, "id" | "userId">) => {
+  updateOne: async (
+    id: string,
+    post: Partial<PostInputType>
+  ): Promise<PostType> => {
     return await prisma.post.update({
       where: { id },
       data: post,
     });
   },
-  findMany: async () => {
+  findMany: async (): Promise<PostType[]> => {
     return await prisma.post.findMany({
       include: {
         user: {
@@ -86,7 +90,7 @@ export const DatabasePostOperations = {
       },
     });
   },
-  findOne: async (id: string) => {
+  findOne: async (id: string): Promise<PostType | null> => {
     return await prisma.post.findUnique({
       where: { id },
       include: {
