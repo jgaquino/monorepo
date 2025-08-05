@@ -1,12 +1,14 @@
 import "./dotenv-config";
 import Fastify from "fastify";
 import { jwtPlugin } from "fastify-auth-jwt";
+import { registerSwagger } from "./swagger";
 import userRoutes from "./routes/user";
 import postRoutes from "./routes/post";
 import loginRoute from "./routes/login";
 
 const app = Fastify();
 
+registerSwagger(app);
 app.register(jwtPlugin);
 app.register(loginRoute);
 app.register(userRoutes);
