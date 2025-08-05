@@ -44,22 +44,18 @@ export default async function postRoutes(fastify: FastifyInstance) {
     "/posts/:id",
     { preHandler: fastify.authenticate },
     async (req, res) => {
-      const { id } = req.params as { id: string };
-      const { title, content } = req.body as Post;
-      const { id: userId } = req.user as User;
-
-      const post = await DatabasePostOperations.findOne(id);
-
-      const validations = {
-        postNotFound: !post,
-        userNotOwner: userId !== post?.userId,
-      };
-      if (validations.postNotFound)
-        return res.code(401).send({ error: "Post not found" });
-      if (validations.userNotOwner)
-        return res.code(401).send({ error: "Not the owner" });
-
       try {
+        const { id } = req.params as { id: string };
+        const { title, content } = req.body as Post;
+        const { id: userId } = req.user as User;
+
+        const post: Post | null = await DatabasePostOperations.findOne(id);
+
+        if (Validations.postNotFound(post))
+          return res.code(401).send({ error: "Post not found" });
+        if (Validations.userNotOwner(post, userId))
+          return res.code(401).send({ error: "Not the owner" });
+
         return res.send(
           await DatabasePostOperations.updateOne(id, { title, content })
         );
@@ -68,4 +64,30 @@ export default async function postRoutes(fastify: FastifyInstance) {
       }
     }
   );
+
+  fastify.delete(
+    "/posts/:id",
+    { preHandler: fastify.authenticate },
+    async (req, res) => {
+      try {
+        const { id } = req.params as { id: string };
+        const { id: userId } = req.user as User;
+        const post: Post | null = await DatabasePostOperations.findOne(id);
+
+        if (Validations.userNotOwner(post, userId))
+          return res.code(401).send({ error: "Not the owner" });
+
+        await DatabasePostOperations.deleteOne(id);
+
+        return res.code(204).send();
+      } catch (error) {
+        return res.code(500).send(error);
+      }
+    }
+  );
 }
+
+const Validations = {
+  postNotFound: (post: Post | null) => !post,
+  userNotOwner: (post: Post | null, userId: string) => userId !== post?.userId,
+};
