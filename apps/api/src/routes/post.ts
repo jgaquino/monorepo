@@ -39,4 +39,33 @@ export default async function postRoutes(fastify: FastifyInstance) {
       return res.code(500).send(error);
     }
   });
+
+  fastify.put(
+    "/posts/:id",
+    { preHandler: fastify.authenticate },
+    async (req, res) => {
+      const { id } = req.params as { id: string };
+      const { title, content } = req.body as Post;
+      const { id: userId } = req.user as User;
+
+      const post = await DatabasePostOperations.findOne(id);
+
+      const validations = {
+        postNotFound: !post,
+        userNotOwner: userId !== post?.userId,
+      };
+      if (validations.postNotFound)
+        return res.code(401).send({ error: "Post not found" });
+      if (validations.userNotOwner)
+        return res.code(401).send({ error: "Not the owner" });
+
+      try {
+        return res.send(
+          await DatabasePostOperations.updateOne(id, { title, content })
+        );
+      } catch (error) {
+        return res.code(500).send(error);
+      }
+    }
+  );
 }

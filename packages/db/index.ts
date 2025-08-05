@@ -32,7 +32,7 @@ export const DatabasePostOperations = {
   deleteOne: async (id: string) => {
     return await prisma.post.delete({ where: { id } });
   },
-  updateOne: async (id: string, post: Post) => {
+  updateOne: async (id: string, post: Omit<Post, "id" | "userId">) => {
     return await prisma.post.update({
       where: { id },
       data: post,
