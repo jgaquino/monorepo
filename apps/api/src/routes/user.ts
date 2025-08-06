@@ -2,12 +2,13 @@ import type { FastifyInstance } from "fastify";
 import { CreateUserType } from "db/schemas/User";
 import { DatabaseUserOperations } from "db";
 import { UserRouteSchemas } from "../swagger";
+import { onlyAuthenticate } from "fastify-auth-jwt";
 
 export default async function userRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/users",
     {
-      preHandler: fastify.authenticate,
+      ...onlyAuthenticate(fastify),
       ...UserRouteSchemas.createOne,
     },
     async (req, res) => {
@@ -48,7 +49,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
   fastify.put(
     "/users/:id",
     {
-      preHandler: fastify.authenticate,
+      ...onlyAuthenticate(fastify),
       ...UserRouteSchemas.updateOne,
     },
     async (req, res) => {
@@ -65,7 +66,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
   fastify.delete(
     "/users/:id",
     {
-      preHandler: fastify.authenticate,
+      ...onlyAuthenticate(fastify),
       ...UserRouteSchemas.deleteOne,
     },
     async (req, res) => {
