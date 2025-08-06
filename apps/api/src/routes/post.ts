@@ -1,26 +1,15 @@
 import type { FastifyInstance } from "fastify";
 import type { Post, User } from "db/types";
 import { DatabasePostOperations } from "db";
-import {
-  CreatePostSchema,
-  PostContentType,
-  PostSchema,
-  UpdatePostSchema,
-} from "db/schemas/Post";
+import { PostContentType } from "db/schemas/Post";
+import { PostRouteSchemas } from "../swagger";
 
 export default async function postRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/posts",
     {
       preHandler: fastify.authenticate,
-      schema: {
-        tags: ["Post"],
-        summary: "Create new post",
-        body: CreatePostSchema,
-        response: {
-          201: PostSchema,
-        },
-      },
+      ...PostRouteSchemas.createOne,
     },
     async (req, res) => {
       const { title, content } = req.body as PostContentType;
@@ -41,16 +30,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/posts",
     {
-      schema: {
-        tags: ["Post"],
-        summary: "Get all posts",
-        response: {
-          200: {
-            type: "array",
-            items: PostSchema,
-          },
-        },
-      },
+      ...PostRouteSchemas.getAll,
     },
     async (_, res) => {
       try {
@@ -64,13 +44,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/posts/:id",
     {
-      schema: {
-        tags: ["Post"],
-        summary: "Get a specific post by id",
-        response: {
-          200: PostSchema,
-        },
-      },
+      ...PostRouteSchemas.getOne,
     },
     async (req, res) => {
       const { id } = req.params as { id: string };
@@ -87,14 +61,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
     "/posts/:id",
     {
       preHandler: fastify.authenticate,
-      schema: {
-        tags: ["Post"],
-        summary: "Update a specific post by id",
-        body: UpdatePostSchema,
-        response: {
-          200: PostSchema,
-        },
-      },
+      ...PostRouteSchemas.updateOne,
     },
     async (req, res) => {
       try {
@@ -122,16 +89,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
     "/posts/:id",
     {
       preHandler: fastify.authenticate,
-      schema: {
-        tags: ["Post"],
-        summary: "Delete a specific post by id",
-        response: {
-          204: {
-            type: "null",
-            description: "User deleted successfully",
-          },
-        },
-      },
+      ...PostRouteSchemas.deleteOne,
     },
     async (req, res) => {
       try {
