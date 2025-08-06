@@ -1,11 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import {
-  UserReponseType,
-  CreateUserType,
-  UpdateUserType,
-  UserType,
-} from "./schemas/User";
-import { PostInputType, PostType } from "./schemas/Post";
+import { UserReponseType, CreateUserType, UserType } from "./schemas/User";
+import { CreatePostType, PostType } from "./schemas/Post";
 
 const prisma = new PrismaClient();
 
@@ -18,7 +13,7 @@ export const DatabaseUserOperations = {
   },
   updateOne: async (
     id: string,
-    userData: UpdateUserType
+    userData: Partial<CreateUserType>
   ): Promise<UserReponseType> => {
     return await prisma.user.update({
       where: { id },
@@ -62,7 +57,7 @@ export const DatabaseUserOperations = {
 };
 
 export const DatabasePostOperations = {
-  createOne: async (newPost: PostInputType): Promise<PostType> => {
+  createOne: async (newPost: CreatePostType): Promise<PostType> => {
     return await prisma.post.create({ data: newPost });
   },
   deleteOne: async (id: string): Promise<void> => {
@@ -70,7 +65,7 @@ export const DatabasePostOperations = {
   },
   updateOne: async (
     id: string,
-    post: Partial<PostInputType>
+    post: Partial<CreatePostType>
   ): Promise<PostType> => {
     return await prisma.post.update({
       where: { id },

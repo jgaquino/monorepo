@@ -96,7 +96,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
     },
     async (req, res) => {
       const { id } = req.params as { id: string };
-      const user = req.body as User;
+      const user = req.body as Partial<CreateUserType>;
       try {
         return res.send(await DatabaseUserOperations.updateOne(id, user));
       } catch (error) {

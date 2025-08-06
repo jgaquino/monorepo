@@ -12,6 +12,7 @@ export const CreatePostSchema = Type.Pick(PostSchema, [
   "userId",
 ]);
 export const PostContentSchema = Type.Pick(PostSchema, ["title", "content"]);
+export const UpdatePostSchema = Type.Partial(PostContentSchema);
 
 export type PostType = Static<typeof PostSchema>;
 export type CreatePostType = Static<typeof CreatePostSchema>;

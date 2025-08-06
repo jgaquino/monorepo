@@ -3,9 +3,9 @@ import type { Post, User } from "db/types";
 import { DatabasePostOperations } from "db";
 import {
   CreatePostSchema,
-  PostContentSchema,
   PostContentType,
   PostSchema,
+  UpdatePostSchema,
 } from "db/schemas/Post";
 
 export default async function postRoutes(fastify: FastifyInstance) {
@@ -90,7 +90,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
       schema: {
         tags: ["Post"],
         summary: "Update a specific post by id",
-        body: PostContentSchema,
+        body: UpdatePostSchema,
         response: {
           200: PostSchema,
         },

@@ -23,5 +23,4 @@ export const UpdateUserSchema = Type.Partial(CreateUserSchema);
 
 export type UserType = Static<typeof UserSchema>;
 export type CreateUserType = Static<typeof CreateUserSchema>;
-export type UpdateUserType = Static<typeof UpdateUserSchema>;
 export type UserReponseType = Static<typeof CreateUserResponseSchema>;
