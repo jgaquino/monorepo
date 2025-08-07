@@ -6,7 +6,8 @@
   ".": "./dist/index.js"
  },
  "scripts": {
-  "build": "tsc -p tsconfig.json"
+  "build": "tsc -p tsconfig.json",
+  "dev": "tsc --watch"
  },
  "dependencies": {
   "fastify": "^5",
