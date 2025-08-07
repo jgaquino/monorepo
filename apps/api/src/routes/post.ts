@@ -58,7 +58,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.put(
+  fastify.patch(
     "/posts/:id",
     {
       ...onlyAuthenticate(fastify),

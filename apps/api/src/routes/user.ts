@@ -46,7 +46,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.put(
+  fastify.patch(
     "/users/:id",
     {
       ...onlyAuthenticate(fastify),
