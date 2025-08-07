@@ -5,7 +5,6 @@
   "exports": {
     "./schemas/User": "./dist/schemas/User.js",
     "./schemas/Post": "./dist/schemas/Post.js",
-    "./types": "./dist/types.js",
     ".": "./dist/index.js"
   },
   "dependencies": {

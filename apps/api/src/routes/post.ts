@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
-import type { Post, User } from "db/types";
 import { DatabasePostOperations } from "db";
-import { PostContentType } from "db/schemas/Post";
+import { PostContentType, PostType } from "db/schemas/Post";
+import { UserType } from "db/schemas/User";
 import { PostRouteSchemas } from "../swagger";
 import { onlyAuthenticate } from "fastify-auth-jwt";
 
@@ -14,7 +14,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
     },
     async (req, res) => {
       const { title, content } = req.body as PostContentType;
-      const { id: userId } = req.user as User;
+      const { id: userId } = req.user as UserType;
 
       try {
         return res
@@ -68,9 +68,9 @@ export default async function postRoutes(fastify: FastifyInstance) {
       try {
         const { id } = req.params as { id: string };
         const { title, content } = req.body as Partial<PostContentType>;
-        const { id: userId } = req.user as User;
+        const { id: userId } = req.user as UserType;
 
-        const post: Post | null = await DatabasePostOperations.findOne(id);
+        const post: PostType | null = await DatabasePostOperations.findOne(id);
 
         if (Validations.postNotFound(post))
           return res.code(401).send({ error: "Post not found" });
@@ -95,8 +95,8 @@ export default async function postRoutes(fastify: FastifyInstance) {
     async (req, res) => {
       try {
         const { id } = req.params as { id: string };
-        const { id: userId } = req.user as User;
-        const post: Post | null = await DatabasePostOperations.findOne(id);
+        const { id: userId } = req.user as UserType;
+        const post: PostType | null = await DatabasePostOperations.findOne(id);
 
         if (Validations.userNotOwner(post, userId))
           return res.code(401).send({ error: "Not the owner" });
@@ -112,6 +112,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
 }
 
 const Validations = {
-  postNotFound: (post: Post | null) => !post,
-  userNotOwner: (post: Post | null, userId: string) => userId !== post?.userId,
+  postNotFound: (post: PostType | null) => !post,
+  userNotOwner: (post: PostType | null, userId: string) =>
+    userId !== post?.userId,
 };

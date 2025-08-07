@@ -1,6 +1,6 @@
 import { type JWT } from "@fastify/jwt";
 import type { FastifyInstance } from "fastify";
-import type { User } from "db/types";
+import { UserType } from "db/schemas/User";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -14,13 +14,13 @@ interface JwtPayload {
   role: string;
 }
 
-const getJwtPayload = ({ id, email, role }: User): JwtPayload => ({
+const getJwtPayload = ({ id, email, role }: UserType): JwtPayload => ({
   id,
   email,
   role,
 });
 
-const sign = (fastify: FastifyInstance, user: User): string => {
+const sign = (fastify: FastifyInstance, user: UserType): string => {
   const payload: JwtPayload = getJwtPayload(user);
   return fastify.jwt.sign(payload);
 };

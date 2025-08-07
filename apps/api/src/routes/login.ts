@@ -35,7 +35,7 @@ export default function loginRoute(fastify: FastifyInstance) {
         };
         const user = await DatabaseUserOperations.findOne(null, email);
         if (user?.password !== password)
-          return res.status(401).send("Unauthorized");
+          return res.status(401).send("Wrong password");
 
         const token = sign(fastify, user);
         res.status(200).send({ token });
