@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { DatabasePostOperations } from "db";
 import { PostContentType, PostType } from "db/schemas/Post";
 import { UserType } from "db/schemas/User";
-import { PostRouteSchemas } from "../swagger";
+import { PostRouteSchemas } from "../plugins/swagger";
 import { onlyAuthenticate } from "fastify-auth-jwt";
 
 export default async function postRoutes(fastify: FastifyInstance) {

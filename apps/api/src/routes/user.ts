@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { CreateUserType } from "db/schemas/User";
 import { DatabaseUserOperations } from "db";
-import { UserRouteSchemas } from "../swagger";
+import { UserRouteSchemas } from "../plugins/swagger";
 import { onlyAuthenticate } from "fastify-auth-jwt";
 
 export default async function userRoutes(fastify: FastifyInstance) {
