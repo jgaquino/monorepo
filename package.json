@@ -1,8 +1,17 @@
 {
- "name": "monorepo",
- "version": "1.0.0",
- "repository": "https://github.com/jgaquino/monorepo.git",
- "author": "Gabriel <iamjoaoaquino@gmail.com>",
- "license": "MIT",
- "private": true
+  "name": "monorepo",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.0.0",
+  "repository": "https://github.com/jgaquino/monorepo.git",
+  "author": "Gabriel <iamjoaoaquino@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "turbo": "^2.5.5",
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev --filter=api",
+    "build": "turbo run build"
+  }
 }

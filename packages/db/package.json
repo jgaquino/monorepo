@@ -1,12 +1,12 @@
 {
   "name": "db",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "./dist/index.js",
   "exports": {
-    "./schemas/User": "./schemas/User.ts",
-    "./schemas/Post": "./schemas/Post.ts",
-    "./types": "./types.ts",
-    ".": "./index.ts"
+    "./schemas/User": "./dist/schemas/User.js",
+    "./schemas/Post": "./dist/schemas/Post.js",
+    "./types": "./dist/types.js",
+    ".": "./dist/index.js"
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",
@@ -14,6 +14,7 @@
     "prisma": "^6.13.0"
   },
   "scripts": {
-    "prisma-db-init": "prisma migrate dev --name init"
+    "prisma-db-init": "prisma migrate dev --name init",
+    "build": "prisma generate && tsc -p tsconfig.json"
   }
 }

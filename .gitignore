@@ -141,3 +141,6 @@ vite.config.ts.timestamp-*
 
 # pnpm
 pnpm-lock.yaml
+
+# Turborepo
+.turbo
