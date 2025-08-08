@@ -8,6 +8,12 @@ export const UserSchema = Type.Object({
   role: Type.String(),
   posts: Type.Optional(Type.Array(PostSchema)),
 });
+export const UserSchemaWithoutPassword = Type.Pick(UserSchema, [
+  "id",
+  "email",
+  "role",
+  "posts",
+]);
 export const CreateUserSchema = Type.Pick(UserSchema, [
   "email",
   "password",
@@ -16,7 +22,6 @@ export const CreateUserSchema = Type.Pick(UserSchema, [
 export const CreateUserResponseSchema = Type.Pick(UserSchema, [
   "id",
   "email",
-  "password",
   "role",
 ]);
 export const UpdateUserSchema = Type.Partial(CreateUserSchema);

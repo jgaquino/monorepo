@@ -20,9 +20,12 @@ export const DatabaseUserOperations = {
       data: userData,
     });
   },
-  findMany: async (): Promise<UserType[]> => {
+  findMany: async (): Promise<UserReponseType[]> => {
     return await prisma.user.findMany({
-      include: {
+      select: {
+        id: true,
+        email: true,
+        role: true,
         posts: {
           select: {
             id: true,
@@ -34,15 +37,13 @@ export const DatabaseUserOperations = {
       },
     });
   },
-  findOne: async (
-    id: string | null,
-    email?: string
-  ): Promise<UserType | null> => {
-    const query = (id && { id }) || (email && { email }) || null;
-    if (!query) throw new Error("Either 'id' or 'email' must be provided.");
+  findOne: async (id: string): Promise<UserReponseType | null> => {
     return await prisma.user.findUnique({
-      where: query,
-      include: {
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        role: true,
         posts: {
           select: {
             id: true,
@@ -51,6 +52,17 @@ export const DatabaseUserOperations = {
             userId: true,
           },
         },
+      },
+    });
+  },
+  findUserForAuth: async (email: string): Promise<UserType | null> => {
+    return await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        password: true,
       },
     });
   },

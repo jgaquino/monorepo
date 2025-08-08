@@ -33,7 +33,7 @@ export default function loginRoute(fastify: FastifyInstance) {
           email: string;
           password: string;
         };
-        const user = await DatabaseUserOperations.findOne(null, email);
+        const user = await DatabaseUserOperations.findUserForAuth(email);
         if (user?.password !== password)
           return res.status(401).send("Wrong password");
 

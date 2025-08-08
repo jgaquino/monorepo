@@ -6,6 +6,7 @@ import {
   CreateUserResponseSchema,
   UserSchema,
   UpdateUserSchema,
+  UserSchemaWithoutPassword,
 } from "db/schemas/User";
 import {
   CreatePostSchema,
@@ -18,13 +19,21 @@ export async function registerSwagger(fastify: FastifyInstance) {
     swagger: {
       info: {
         title: "User and Post API",
-        description: "API documentation for my Fastify project",
         version: "1.0.0",
       },
       host: "localhost:3000",
       schemes: ["http"],
       consumes: ["application/json"],
       produces: ["application/json"],
+      securityDefinitions: {
+        bearerAuth: {
+          type: "apiKey",
+          name: "Authorization",
+          in: "header",
+          description:
+            "Enter your bearer token in the format **Bearer &lt;token>**",
+        },
+      },
     },
   });
 
@@ -46,7 +55,7 @@ export const UserRouteSchemas = {
       response: {
         201: {
           type: "array",
-          items: UserSchema,
+          items: UserSchemaWithoutPassword,
         },
       },
     },
@@ -75,6 +84,7 @@ export const UserRouteSchemas = {
       tags: [USER_TAG],
       summary: "Update specific user by id",
       body: UpdateUserSchema,
+      security: [{ bearerAuth: [] }],
       response: {
         201: CreateUserResponseSchema,
       },
@@ -84,6 +94,7 @@ export const UserRouteSchemas = {
     schema: {
       tags: [USER_TAG],
       summary: "Delete specific user by id",
+      security: [{ bearerAuth: [] }],
       response: {
         204: {
           type: "null",
@@ -122,6 +133,7 @@ export const PostRouteSchemas = {
       tags: [POST_TAG],
       summary: "Create new post",
       body: CreatePostSchema,
+      security: [{ bearerAuth: [] }],
       response: {
         201: PostSchema,
       },
@@ -132,6 +144,7 @@ export const PostRouteSchemas = {
       tags: [POST_TAG],
       summary: "Update a specific post by id",
       body: UpdatePostSchema,
+      security: [{ bearerAuth: [] }],
       response: {
         200: PostSchema,
       },
@@ -141,6 +154,7 @@ export const PostRouteSchemas = {
     schema: {
       tags: [POST_TAG],
       summary: "Delete a specific post by id",
+      security: [{ bearerAuth: [] }],
       response: {
         204: {
           type: "null",

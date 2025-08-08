@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { CreateUserType } from "db/schemas/User";
+import { CreateUserType, UserType } from "db/schemas/User";
 import { DatabaseUserOperations } from "db";
 import { UserRouteSchemas } from "../plugins/swagger";
 import { onlyAuthenticate } from "fastify-auth-jwt";
@@ -7,10 +7,7 @@ import { onlyAuthenticate } from "fastify-auth-jwt";
 export default async function userRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/users",
-    {
-      ...onlyAuthenticate(fastify),
-      ...UserRouteSchemas.createOne,
-    },
+    { ...UserRouteSchemas.createOne },
     async (req, res) => {
       const newUser = req.body as CreateUserType;
       try {
@@ -55,6 +52,13 @@ export default async function userRoutes(fastify: FastifyInstance) {
     async (req, res) => {
       const { id } = req.params as { id: string };
       const user = req.body as Partial<CreateUserType>;
+      const currentUser = req.user as UserType;
+
+      if (currentUser.id !== id)
+        return res
+          .code(401)
+          .send({ error: "Only able to update your own data" });
+
       try {
         return res.send(await DatabaseUserOperations.updateOne(id, user));
       } catch (error) {
@@ -71,6 +75,13 @@ export default async function userRoutes(fastify: FastifyInstance) {
     },
     async (req, res) => {
       const { id } = req.params as { id: string };
+      const currentUser = req.user as UserType;
+
+      if (currentUser.id !== id)
+        return res
+          .code(401)
+          .send({ error: "Only able to delete your own user" });
+
       try {
         await DatabaseUserOperations.deleteOne(id);
         return res.code(204).send();
