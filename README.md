@@ -14,6 +14,7 @@ This monorepo is built using **Turborepo** and **pnpm** workspaces to manage mul
 
 ## 📁 Monorepo Structure
 
+<pre>
 ├── apps/
 │ └── api/ # REST API (Fastify)
 ├── packages/
@@ -22,6 +23,7 @@ This monorepo is built using **Turborepo** and **pnpm** workspaces to manage mul
 ├── turbo.json # Turborepo configuration
 ├── pnpm-workspace.yaml # pnpm workspace configuration
 └── tsconfig.json # Base TypeScript config for all packages
+</pre>
 
 ### Workspaces
 
