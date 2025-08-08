@@ -37,7 +37,7 @@ export const DatabaseUserOperations = {
       },
     });
   },
-  findOne: async (id: string): Promise<UserReponseType | null> => {
+  findOne: async (id: string): Promise<Omit<UserType, "password"> | null> => {
     return await prisma.user.findUnique({
       where: { id },
       select: {

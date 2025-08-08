@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { DatabasePostOperations } from "db";
 import { PostContentType, PostType } from "db/schemas/Post";
 import { UserType } from "db/schemas/User";
-import { PostRouteSchemas } from "../plugins/swagger";
+import { postRouteSchemas } from "../plugins/swagger/post-route-schemas";
 import { onlyAuthenticate } from "fastify-auth-jwt";
 
 export default async function postRoutes(fastify: FastifyInstance) {
@@ -10,7 +10,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
     "/posts",
     {
       ...onlyAuthenticate(fastify),
-      ...PostRouteSchemas.createOne,
+      ...postRouteSchemas.createOne,
     },
     async (req, res) => {
       const { title, content } = req.body as PostContentType;
@@ -31,7 +31,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/posts",
     {
-      ...PostRouteSchemas.getAll,
+      ...postRouteSchemas.getAll,
     },
     async (_, res) => {
       try {
@@ -45,7 +45,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/posts/:id",
     {
-      ...PostRouteSchemas.getOne,
+      ...postRouteSchemas.getOne,
     },
     async (req, res) => {
       const { id } = req.params as { id: string };
@@ -62,7 +62,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
     "/posts/:id",
     {
       ...onlyAuthenticate(fastify),
-      ...PostRouteSchemas.updateOne,
+      ...postRouteSchemas.updateOne,
     },
     async (req, res) => {
       try {
@@ -90,7 +90,7 @@ export default async function postRoutes(fastify: FastifyInstance) {
     "/posts/:id",
     {
       ...onlyAuthenticate(fastify),
-      ...PostRouteSchemas.deleteOne,
+      ...postRouteSchemas.deleteOne,
     },
     async (req, res) => {
       try {

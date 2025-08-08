@@ -1,13 +1,13 @@
 import type { FastifyInstance } from "fastify";
 import { CreateUserType, UserType } from "db/schemas/User";
 import { DatabaseUserOperations } from "db";
-import { UserRouteSchemas } from "../plugins/swagger";
+import { userRouteSchemas } from "../plugins/swagger/user-route-schemas";
 import { onlyAuthenticate } from "fastify-auth-jwt";
 
 export default async function userRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/users",
-    { ...UserRouteSchemas.createOne },
+    { ...userRouteSchemas.createOne },
     async (req, res) => {
       const newUser = req.body as CreateUserType;
       try {
@@ -20,7 +20,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.get("/users", { ...UserRouteSchemas.getAll }, async (_, res) => {
+  fastify.get("/users", { ...userRouteSchemas.getAll }, async (_, res) => {
     try {
       return res.send(await DatabaseUserOperations.findMany());
     } catch (error) {
@@ -30,12 +30,15 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
   fastify.get(
     "/users/:id",
-    { ...UserRouteSchemas.getOne },
+    { ...userRouteSchemas.getOne },
     async (req, res) => {
       const { id } = req.params as { id: string };
       try {
         const user = await DatabaseUserOperations.findOne(id);
-        if (!user) return res.code(404).send({ error: "User not found" });
+
+        if (Validations.userNotFound(user))
+          return res.code(404).send({ error: "User not found" });
+
         return res.send(user);
       } catch (error) {
         return res.code(500).send(error);
@@ -47,14 +50,14 @@ export default async function userRoutes(fastify: FastifyInstance) {
     "/users/:id",
     {
       ...onlyAuthenticate(fastify),
-      ...UserRouteSchemas.updateOne,
+      ...userRouteSchemas.updateOne,
     },
     async (req, res) => {
       const { id } = req.params as { id: string };
       const user = req.body as Partial<CreateUserType>;
       const currentUser = req.user as UserType;
 
-      if (currentUser.id !== id)
+      if (Validations.userNotOwner(currentUser, id))
         return res
           .code(401)
           .send({ error: "Only able to update your own data" });
@@ -71,13 +74,13 @@ export default async function userRoutes(fastify: FastifyInstance) {
     "/users/:id",
     {
       ...onlyAuthenticate(fastify),
-      ...UserRouteSchemas.deleteOne,
+      ...userRouteSchemas.deleteOne,
     },
     async (req, res) => {
       const { id } = req.params as { id: string };
       const currentUser = req.user as UserType;
 
-      if (currentUser.id !== id)
+      if (Validations.userNotOwner(currentUser, id))
         return res
           .code(401)
           .send({ error: "Only able to delete your own user" });
@@ -91,3 +94,8 @@ export default async function userRoutes(fastify: FastifyInstance) {
     }
   );
 }
+
+const Validations = {
+  userNotFound: (user: Omit<UserType, "password"> | null) => !user,
+  userNotOwner: (user: UserType | null, userId: string) => userId !== user?.id,
+};
