@@ -1,5 +1,5 @@
 import {
-  CreatePostSchema,
+  PostContentSchema,
   PostSchema,
   UpdatePostSchema,
 } from "db/schemas/Post";
@@ -31,7 +31,7 @@ export const postRouteSchemas = {
     schema: {
       tags: [POST_TAG],
       summary: "Create new post",
-      body: CreatePostSchema,
+      body: PostContentSchema,
       security: [{ bearerAuth: [] }],
       response: {
         201: PostSchema,
