@@ -12,6 +12,8 @@
   },
   "scripts": {
     "dev": "turbo run dev",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "clean-all": "pnpm clean && turbo run clean",
+    "clean": "rm -rf .turbo node_modules pnpm-lock.yaml"
   }
 }
