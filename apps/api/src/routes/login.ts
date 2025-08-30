@@ -24,6 +24,15 @@ export default function loginRoute(fastify: FastifyInstance) {
               token: { type: "string" },
             },
           },
+          401: {
+            type: "object",
+            properties: {
+              message: { type: "string" },
+            },
+          },
+          500: {
+            type: "string",
+          },
         },
       },
     },
@@ -35,10 +44,10 @@ export default function loginRoute(fastify: FastifyInstance) {
         };
         const user = await DatabaseUserOperations.findUserForAuth(email);
         if (user?.password !== password)
-          return res.status(401).send("Wrong password");
+          return res.status(401).send({ message: "Wrong password" });
 
         const token = sign(fastify, user);
-        res.status(200).send({ token });
+        res.status(201).send({ token });
       } catch (error) {
         res.status(500).send(error);
       }

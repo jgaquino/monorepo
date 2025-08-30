@@ -18,12 +18,12 @@ export default async function postRoutes(fastify: FastifyInstance) {
 
       try {
         return res
-          .code(201)
+          .status(201)
           .send(
             await DatabasePostOperations.createOne({ title, content, userId })
           );
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );
@@ -35,9 +35,9 @@ export default async function postRoutes(fastify: FastifyInstance) {
     },
     async (_, res) => {
       try {
-        return res.code(200).send(await DatabasePostOperations.findMany());
+        return res.status(200).send(await DatabasePostOperations.findMany());
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );
@@ -52,12 +52,12 @@ export default async function postRoutes(fastify: FastifyInstance) {
       const post: PostType | null = await DatabasePostOperations.findOne(id);
 
       if (Validations.postNotFound(post))
-        return res.code(401).send({ error: "Post not found" });
+        return res.status(401).send({ message: "Post not found" });
 
       try {
-        return res.code(200).send(post);
+        return res.status(200).send(post);
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );
@@ -77,15 +77,15 @@ export default async function postRoutes(fastify: FastifyInstance) {
         const post: PostType | null = await DatabasePostOperations.findOne(id);
 
         if (Validations.postNotFound(post))
-          return res.code(401).send({ error: "Post not found" });
+          return res.status(401).send({ message: "Post not found" });
         if (Validations.userNotOwner(post, userId))
-          return res.code(401).send({ error: "Not the owner" });
+          return res.status(401).send({ message: "Not the owner" });
 
         return res
-          .code(200)
+          .status(200)
           .send(await DatabasePostOperations.updateOne(id, { title, content }));
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );
@@ -103,15 +103,15 @@ export default async function postRoutes(fastify: FastifyInstance) {
         const post: PostType | null = await DatabasePostOperations.findOne(id);
 
         if (Validations.postNotFound(post))
-          return res.code(401).send({ error: "Post not found" });
+          return res.status(401).send({ message: "Post not found" });
         if (Validations.userNotOwner(post, userId))
-          return res.code(401).send({ error: "Not the owner" });
+          return res.status(401).send({ message: "Not the owner" });
 
         await DatabasePostOperations.deleteOne(id);
 
-        return res.code(204).send();
+        return res.status(204).send();
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );

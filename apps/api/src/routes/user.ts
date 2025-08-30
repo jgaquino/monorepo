@@ -12,19 +12,19 @@ export default async function userRoutes(fastify: FastifyInstance) {
       const newUser = req.body as CreateUserType;
       try {
         return res
-          .code(201)
+          .status(201)
           .send(await DatabaseUserOperations.createOne(newUser));
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );
 
   fastify.get("/users", { ...userRouteSchemas.getAll }, async (_, res) => {
     try {
-      return res.send(await DatabaseUserOperations.findMany());
+      return res.status(200).send(await DatabaseUserOperations.findMany());
     } catch (error) {
-      return res.code(500).send(error);
+      return res.status(500).send(error);
     }
   });
 
@@ -37,11 +37,11 @@ export default async function userRoutes(fastify: FastifyInstance) {
         const user = await DatabaseUserOperations.findOne(id);
 
         if (Validations.userNotFound(user))
-          return res.code(404).send({ error: "User not found" });
+          return res.status(404).send({ message: "User not found" });
 
-        return res.send(user);
+        return res.status(200).send(user);
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );
@@ -59,13 +59,13 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
       if (Validations.userNotOwner(currentUser, id))
         return res
-          .code(401)
-          .send({ error: "Only able to update your own data" });
+          .status(401)
+          .send({ message: "Only able to update your own data" });
 
       try {
         return res.send(await DatabaseUserOperations.updateOne(id, user));
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );
@@ -82,14 +82,14 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
       if (Validations.userNotOwner(currentUser, id))
         return res
-          .code(401)
-          .send({ error: "Only able to delete your own user" });
+          .status(401)
+          .send({ message: "Only able to delete your own user" });
 
       try {
         await DatabaseUserOperations.deleteOne(id);
-        return res.code(204).send();
+        return res.status(204).send();
       } catch (error) {
-        return res.code(500).send(error);
+        return res.status(500).send(error);
       }
     }
   );

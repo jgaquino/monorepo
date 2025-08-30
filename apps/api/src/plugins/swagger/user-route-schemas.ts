@@ -13,9 +13,12 @@ export const userRouteSchemas = {
       tags: [USER_TAG],
       summary: "Get all users",
       response: {
-        201: {
+        200: {
           type: "array",
           items: UserSchemaWithoutPassword,
+        },
+        500: {
+          type: "string",
         },
       },
     },
@@ -25,7 +28,16 @@ export const userRouteSchemas = {
       tags: [USER_TAG],
       summary: "Get a specific user by id",
       response: {
-        201: UserSchema,
+        200: UserSchemaWithoutPassword,
+        404: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+          },
+        },
+        500: {
+          type: "string",
+        },
       },
     },
   },
@@ -36,6 +48,9 @@ export const userRouteSchemas = {
       body: CreateUserSchema,
       response: {
         201: CreateUserResponseSchema,
+        500: {
+          type: "string",
+        },
       },
     },
   },
@@ -47,6 +62,15 @@ export const userRouteSchemas = {
       security: [{ bearerAuth: [] }],
       response: {
         201: CreateUserResponseSchema,
+        401: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+          },
+        },
+        500: {
+          type: "string",
+        },
       },
     },
   },
@@ -59,6 +83,15 @@ export const userRouteSchemas = {
         204: {
           type: "null",
           description: "User deleted successfully",
+        },
+        401: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+          },
+        },
+        500: {
+          type: "string",
         },
       },
     },

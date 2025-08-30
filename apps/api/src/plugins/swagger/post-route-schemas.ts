@@ -15,6 +15,9 @@ export const postRouteSchemas = {
           type: "array",
           items: PostSchema,
         },
+        500: {
+          type: "string",
+        },
       },
     },
   },
@@ -24,6 +27,15 @@ export const postRouteSchemas = {
       summary: "Get a specific post by id",
       response: {
         200: PostSchema,
+        401: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+          },
+        },
+        500: {
+          type: "string",
+        },
       },
     },
   },
@@ -35,6 +47,9 @@ export const postRouteSchemas = {
       security: [{ bearerAuth: [] }],
       response: {
         201: PostSchema,
+        500: {
+          type: "string",
+        },
       },
     },
   },
@@ -46,6 +61,15 @@ export const postRouteSchemas = {
       security: [{ bearerAuth: [] }],
       response: {
         200: PostSchema,
+        401: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+          },
+        },
+        500: {
+          type: "string",
+        },
       },
     },
   },
@@ -58,6 +82,15 @@ export const postRouteSchemas = {
         204: {
           type: "null",
           description: "User deleted successfully",
+        },
+        401: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+          },
+        },
+        500: {
+          type: "string",
         },
       },
     },
